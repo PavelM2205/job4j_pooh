@@ -1,11 +1,15 @@
 package ru.job4j.pooh.service;
 
-import ru.job4j.pooh.store.CASMapInMap;
 import ru.job4j.pooh.Req;
 import ru.job4j.pooh.Resp;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 public class TopicService implements Service {
-    private final CASMapInMap store = new CASMapInMap();
+    private final Map<String, ConcurrentHashMap<String, ConcurrentLinkedQueue<String>>> store =
+            new ConcurrentHashMap<>();
     private static final String GET = "GET";
     private static final String POST = "POST";
     private static final String GOOD = "200";
@@ -21,9 +25,11 @@ public class TopicService implements Service {
         if (GET.equals(type)) {
             String status = GOOD;
             String text;
-            store.addTopic(source);
-            store.addIndividualQueue(source, req.getParam());
-            String answer = store.getFromIndividualQueue(source, param);
+            store.putIfAbsent(source, new ConcurrentHashMap<>());
+            store.get(source).putIfAbsent(param, new ConcurrentLinkedQueue<>());
+            String answer =
+                    store.getOrDefault(source, new ConcurrentHashMap<>())
+                            .getOrDefault(param, new ConcurrentLinkedQueue<>()).poll();
             text = answer;
             if (answer == null) {
                 status = DATA_IS_NOT;
@@ -32,8 +38,8 @@ public class TopicService implements Service {
             result = new Resp(text, status);
         } else if (POST.equals(type)) {
             String status;
-            if (store.isTopic(source)) {
-                store.addIntoEachIndividualQueue(source, param);
+            if (store.containsKey(source)) {
+                store.get(source).forEach((key, value) -> value.add(param));
                 status = GOOD;
             } else {
                 status = DATA_IS_NOT;

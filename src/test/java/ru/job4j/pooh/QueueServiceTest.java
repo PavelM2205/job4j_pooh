@@ -5,7 +5,7 @@ import ru.job4j.pooh.service.QueueService;
 
 import static org.assertj.core.api.Assertions.*;
 
-class QueueServiceTest {
+public class QueueServiceTest {
 
     @Test
     public void whenPostThenGetQueue() {

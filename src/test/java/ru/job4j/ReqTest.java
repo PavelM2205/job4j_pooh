@@ -6,7 +6,7 @@ import ru.job4j.pooh.Req;
 import static org.assertj.core.api.Assertions.*;
 
 
-class ReqTest {
+public class ReqTest {
 
     @Test
     public void whenQueueModePostMethod() {

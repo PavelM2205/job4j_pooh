@@ -5,10 +5,10 @@ import ru.job4j.pooh.service.TopicService;
 
 import static org.assertj.core.api.Assertions.*;
 
-class TopicServiceTest {
+public class TopicServiceTest {
 
     @Test
-    void whenTopic() {
+    public void whenTopic() {
         TopicService topicService = new TopicService();
         String paramForPublisher = "temperature=18";
         String paramForSubscriber1 = "client407";

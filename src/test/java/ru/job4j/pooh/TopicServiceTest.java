@@ -71,4 +71,14 @@ public class TopicServiceTest {
         assertThat(resp2.getText()).isEqualTo("temperature=18");
         assertThat(resp2.getStatus()).isEqualTo("200");
     }
+
+    @Test
+    public void whenWrongRequestMethodThenMustBeResponse501() {
+        TopicService topicService = new TopicService();
+        Resp result = topicService.process(
+                new Req("DELETE", "topic", "weather", null)
+        );
+        assertThat(result.getText()).isEqualTo("");
+        assertThat(result.getStatus()).isEqualTo("501");
+    }
 }

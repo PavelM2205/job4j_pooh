@@ -47,4 +47,15 @@ public class QueueServiceTest {
         assertThat(result2.getText()).isEqualTo("");
         assertThat(result2.getStatus()).isEqualTo("204");
     }
+
+    @Test
+    public void whenWrongRequestMethodThenMustBeResponse501() {
+        QueueService queueService = new QueueService();
+        Resp result = queueService.process(
+                new Req("DELETE", "queue", "weather", null)
+        );
+        assertThat(result.getText()).isEqualTo("");
+        assertThat(result.getStatus()).isEqualTo("501");
+
+    }
 }
